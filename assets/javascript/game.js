@@ -1,5 +1,5 @@
 
-var words = ['segal', 'norris', 'stallone', 'zidar', 'chan', 'statham'];
+var words = ['doug', 'rugrats', 'animaniacs', 'ducktales', 'daria', 'freakazoid', 'kablam'];
 var word = words[Math.floor(Math.random() * words.length)];
 var wordArray = [];
 var guessArray = [];
@@ -7,10 +7,12 @@ var guessedLetters = [];
 var remainingLetters = word.length;
 var remainingGuesses = word.length + 5;
 var guessDisplay = document.getElementById("guessedDiv");
-var display = document.getElementById("wordDiv");
+var display = document.getElementById("wordP");
 var remainingdisplay = document.getElementById("remainingDiv");
+var winImage = document.getElementById("showImage");
 var letters = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"]
-
+var button = '<button type="button" class="btn btn-info" onclick="gameStart()">Play Again</button>'
+var winWord = "";
 
 //creates answer array
 function getWord() {
@@ -24,21 +26,23 @@ function getWord() {
     }
 }
 
-//win checking function
+//win checking and win display update function
 function winCheck() {
     if (remainingLetters <= 0) {
-        display.innerHTML = wordArray.join("");
-        guessDisplay.innerHTML = "You Win!"
-        remainingdisplay.innerHTML = '<button onclick="gameStart()">Play Again</button>';
+        winWord = wordArray.join("");
+        display.innerHTML = winWord.charAt(0).toUpperCase() + winWord.slice(1);
+        guessDisplay.innerHTML = "You Win!";
+        remainingdisplay.innerHTML = button;
+        winImage.innerHTML = '<img class="img-thumbnail m-2" src="./assets/images/' + word + '.jpg">';
     }
 }
 
 //loss checking function
 function loseCheck() {
     if (remainingGuesses <= 0) {
-        display.innerHTML = "You Lose"
-        guessDisplay.innerHTML = '<button onclick="gameStart()">Play Again</button>'
-        remainingdisplay.innerHTML = "";
+        guessDisplay.innerHTML = "You Lose";
+        remainingdisplay.innerHTML = button;
+
     }
 }
 
@@ -48,7 +52,8 @@ getWord();
 guessArray = [];
 remainingdisplay.innerHTML = "Remaining Guesses: " + remainingGuesses;
 display.innerHTML = wordArray.join(" ");
-guessDisplay.innerHTML = guessArray
+guessDisplay.innerHTML = guessArray;
+winImage.innerHTML = "";
 }
 
 //loading intital word
@@ -74,14 +79,17 @@ document.onkeyup = function(event) {
 
 //if already guessed, avoids decrementing remaining letters
         else if (guessedLetters.indexOf(userGuess) != -1) {
-
         }
-//displays wrong guesses
-        else {
+//displays wrong guesses if first time guessing
+        else if (guessArray.indexOf(userGuess) === -1) {
             guessArray.push(userGuess)
             remainingGuesses--;
-            guessDisplay.textContent = guessArray.join(" ");
+            guessDisplay.innerHTML = guessArray.join(" ");
             remainingdisplay.innerHTML = "Remaining Guesses: " + remainingGuesses;
+        }
+//does nothing if user is repeating a wrong guess
+        else {
+
         }
     }
 
